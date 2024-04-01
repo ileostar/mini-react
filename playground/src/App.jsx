@@ -1,4 +1,4 @@
-import { React } from '../../packages/react/index.js'
+import React from '../../packages/react/index.js'
 
 export const App = (
   <div class="app">

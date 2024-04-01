@@ -1,10 +1,10 @@
-import { render } from '../react/index.js'
+import React from '../react/index.js'
 
-export const ReactDOM = {
+export default {
   createRoot(container) {
     return {
       render(el) {
-        render(el, container)
+        React.render(el, container)
       }
     }
   }
