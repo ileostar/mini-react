@@ -11,3 +11,8 @@
 
 - [x] 实现任务调度器
 - [x] 实现fiber架构
+
+## day 3
+
+- [x] 实现统一提交
+- [x] 实现function coponent
