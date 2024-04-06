@@ -16,3 +16,8 @@
 
 - [x] 实现统一提交
 - [x] 实现function coponent
+
+## day 4
+
+- [x] 实现事件绑定
+- [ ] 实现更新Props
