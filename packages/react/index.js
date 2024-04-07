@@ -25,6 +25,7 @@ let wipRoot =null
 let currentRoot = null;
 let nextWorkOfUnit = null;
 let deletions = [];
+let wipFiber = null;
 function render(el, container) {
   wipRoot = {
     dom: container,
@@ -135,26 +136,32 @@ function reconcileChildren(fiber, children) {
   children.forEach((child,index) => {
     const isSameType = oldFiber && oldFiber.type === child.type;
 
-    let newFiber = {
-      type: child.type,
-      props: child.props,
-      child: null,
-      parent: fiber,
-      sibling: null,
-    };
+    let newFiber;
     if (isSameType) {
       // update
-      newFiber = Object.assign(newFiber,{
+      newFiber = {
+        type: child.type,
+        props: child.props,
+        child: null,
+        parent: fiber,
+        sibling: null,
         effectTag: "UPDATE",
         dom: oldFiber.dom,
         alternate: oldFiber
-      })
+      }
     } else {
       // add
-      newFiber = Object.assign(newFiber,{
-        effectTag: "PLACEMENT",
-        dom: null
-      })
+      if(child) {
+        newFiber ={
+          type: child.type,
+          props: child.props,
+          child: null,
+          parent: fiber,
+          sibling: null,
+          effectTag: "PLACEMENT",
+          dom: null
+        }
+      }
 
       if(oldFiber)
         deletions.push(oldFiber)
@@ -168,8 +175,12 @@ function reconcileChildren(fiber, children) {
     else
       prevChild.sibling = newFiber;
 
-    prevChild = newFiber;
+    if(newFiber) prevChild = newFiber
   })
+  while (oldFiber) {
+    deletions.push(oldFiber)
+    oldFiber = oldFiber.sibling
+  }
 }
 
 function updateFunctionComponent(fiber) {

@@ -24,7 +24,7 @@
 
 ## day 5
 
-- [ ] diff-更新children
-- [ ] diff-删除多余的老节点
-- [ ] 解决edge case的方式
+- [x] diff-更新children
+- [x] diff-删除多余的老节点
+- [x] 解决edge case的方式
 - [ ] 优化更新-减少不必要的计算

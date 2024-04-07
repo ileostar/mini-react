@@ -5,6 +5,14 @@ function Counter () {
   function Foo() {
     return <div>foo</div>
   }
+  function Bar() {
+    return (
+      <div>
+        bar
+        <div>111</div>
+      </div>
+    )
+  }
   function handleClick () {
     showBar = !showBar
     React.update()
@@ -12,7 +20,7 @@ function Counter () {
   return (
     <div>
       Counter
-      <div>{showBar ? 'bar' : <Foo/>}</div>
+      {showBar && <Foo/>}
       <button onClick={handleClick}>click</button>
     </div>
   )
