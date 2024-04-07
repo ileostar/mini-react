@@ -1,17 +1,18 @@
-import React from '../../packages/react/index.js'
+import React from 'mini-react'
 
-let count = 10;
-let props = { id: '1111' }
-function Count ({ num }) {
+let showBar = false
+function Counter () {
+  function Foo() {
+    return <div>foo</div>
+  }
   function handleClick () {
-    console.log('clicked')
-    props = { id: '2222' }
-    count = count + 1
+    showBar = !showBar
     React.update()
   }
   return (
-    <div {...props}>
-      <div>count: { count }</div>
+    <div>
+      Counter
+      <div>{showBar ? 'bar' : <Foo/>}</div>
       <button onClick={handleClick}>click</button>
     </div>
   )
@@ -22,7 +23,7 @@ export function App() {
     <div class="app">
       <h1>hello world</h1>
       <div>hi</div>
-      <Count num={100}></Count>
+      <Counter ></Counter>
     </div>
   )
 }

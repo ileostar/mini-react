@@ -24,6 +24,7 @@ function createElement(type, config, ...children) {
 let wipRoot =null
 let currentRoot = null;
 let nextWorkOfUnit = null;
+let deletions = [];
 function render(el, container) {
   wipRoot = {
     dom: container,
@@ -50,16 +51,30 @@ requestIdleCallback(workerLoop)
 
 /** 统一提交 */
 function commitRoot() {
+  deletions.forEach(commitDeletion);
   commitWork(wipRoot.child)
   currentRoot = wipRoot
+
+  // 重置
   wipRoot = null
+  deletions = []
+}
+function commitDeletion(fiber) {
+  if(fiber.dom) {
+    let fiberParent = fiber.parent
+    while(!fiberParent.dom) {
+      fiberParent = fiberParent.parent
+    }
+    fiberParent.dom.removeChild(fiber.dom)
+  }else{
+    commitDeletion(fiber.child)
+  }
 }
 function commitWork(fiber) {
   if(!fiber) return
 
-  let fiberParent = fiber.parent
-
   // 忽略空的function组件
+  let fiberParent = fiber.parent
   while(!fiberParent.dom) {
     fiberParent = fiberParent.parent
   }
@@ -140,6 +155,9 @@ function reconcileChildren(fiber, children) {
         effectTag: "PLACEMENT",
         dom: null
       })
+
+      if(oldFiber)
+        deletions.push(oldFiber)
     }
 
     if (oldFiber)

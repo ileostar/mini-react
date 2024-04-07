@@ -8,11 +8,11 @@ importers:
 
   .:
     dependencies:
-      react:
-        specifier: link:packages/react
+      mini-react:
+        specifier: workspace:^
         version: link:packages/react
-      react-dom:
-        specifier: link:packages/react-dom
+      mini-react-dom:
+        specifier: workspace:^
         version: link:packages/react-dom
 
   packages/react: {}

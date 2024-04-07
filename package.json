@@ -1,12 +1,11 @@
 {
   "name": "mini-react",
-  "version": "1.0.0",
   "description": "Implement a simple react",
   "scripts": {
     "dev:play": "pnpm --filter ./playground dev"
   },
   "dependencies": {
-    "react": "link:packages/react",
-    "react-dom": "link:packages/react-dom"
+    "mini-react": "workspace:^",
+    "mini-react-dom": "workspace:^"
   }
 }
