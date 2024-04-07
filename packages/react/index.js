@@ -41,6 +41,10 @@ function render(el, container) {
 function workerLoop(deadline) {
   while(deadline.timeRemaining() > 1 && nextWorkOfUnit) {
     nextWorkOfUnit = performWorkOfUnit(nextWorkOfUnit)
+
+    if(wipRoot?.sibling?.type === nextWorkOfUnit?.type) {
+      nextWorkOfUnit = undefined
+    }
   }
   if(!nextWorkOfUnit && wipRoot){
     commitRoot()
@@ -184,12 +188,12 @@ function reconcileChildren(fiber, children) {
 }
 
 function updateFunctionComponent(fiber) {
-  console.log("functon component",fiber)
+  wipFiber = fiber
   const children = [fiber.type(fiber.props)]
   reconcileChildren(fiber, children)
 }
 
-function updateHostComponent(fiber) { 
+function updateHostComponent(fiber) {
   if(!fiber.dom) {
     const dom = (fiber.dom = createDom(fiber.type, fiber.props))
     updateProps(dom, fiber.props)
@@ -222,13 +226,15 @@ function performWorkOfUnit(fiber) {
 }
 
 function update() {
-  wipRoot = {
-    dom: currentRoot.dom,
-    props: currentRoot.props,
-    alternate: currentRoot,
-  };
+  let currentFiber = wipFiber
+  return () => {
+    wipRoot = {
+      ...currentFiber,
+      alternate: currentRoot,
+    };
 
-  nextWorkOfUnit = wipRoot;
+    nextWorkOfUnit = wipRoot;
+  }
 }
 
 const React = {

@@ -1,4 +1,4 @@
-import React from '../react/index.js'
+import React from 'mini-react'
 
 export default {
   createRoot(container) {
