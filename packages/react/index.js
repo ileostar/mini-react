@@ -23,13 +23,9 @@ function createElement(type, config, ...children) {
   }
 }
 
-<<<<<<< HEAD
 /** 整个渲染过程的根 Fiber 节点 */
 let wipRoot = null
 /** 单元工作：处理一个真实dom根节点 */
-=======
-let wipRoot = null
->>>>>>> a0f2245ea6c81de906d9fd1904778a4d458aad6d
 let currentRoot = null;
 /** 下一个工作单元 */
 let nextWorkOfUnit = null;
@@ -56,18 +52,9 @@ function workerLoop(deadline) {
     nextWorkOfUnit = performWorkOfUnit(nextWorkOfUnit)
 
     if (wipRoot?.sibling?.type === nextWorkOfUnit?.type) {
-<<<<<<< HEAD
       nextWorkOfUnit = undefined
     }
   }
-
-  // 无可执行工作，提交
-=======
-      console.log("hit", wipRoot, nextWorkOfUnit);
-      nextWorkOfUnit = undefined
-    }
-  }
->>>>>>> a0f2245ea6c81de906d9fd1904778a4d458aad6d
   if (!nextWorkOfUnit && wipRoot) {
     commitRoot()
   }
