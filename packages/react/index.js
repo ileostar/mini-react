@@ -1,3 +1,4 @@
+/** 创建文本节点 */
 function createTextNode(text) {
   return {
     type: "TEXT_ELEMENT",
@@ -8,6 +9,7 @@ function createTextNode(text) {
   };
 }
 
+/** 创建虚拟dom */
 function createElement(type, config, ...children) {
   return {
     type,
@@ -21,11 +23,18 @@ function createElement(type, config, ...children) {
   }
 }
 
+/** 整个渲染过程的根 Fiber 节点 */
 let wipRoot = null
+/** 单元工作：处理一个真实dom根节点 */
 let currentRoot = null;
+/** 下一个工作单元 */
 let nextWorkOfUnit = null;
+/** 要删除的节点 */
 let deletions = [];
+/** 当前正在渲染的fiber */
 let wipFiber = null;
+
+/** 渲染函数 */
 function render(el, container) {
   wipRoot = {
     dom: container,
@@ -66,6 +75,7 @@ function commitRoot() {
   wipRoot = null
   deletions = []
 }
+/** 统一删除节点 */
 function commitDeletion(fiber) {
   if (fiber.dom) {
     let fiberParent = fiber.parent
@@ -77,6 +87,7 @@ function commitDeletion(fiber) {
     commitDeletion(fiber.child)
   }
 }
+/** 统一提交节点 */
 function commitWork(fiber) {
   if (!fiber) return
 
@@ -101,6 +112,7 @@ function commitWork(fiber) {
   commitWork(fiber.sibling)
 }
 
+/** 创建真实dom */
 function createDom(type, props) {
   return type === 'TEXT_ELEMENT'
     ? document.createTextNode(props.nodeValue ? props.nodeValue : '')
@@ -191,6 +203,7 @@ function reconcileChildren(fiber, children) {
   }
 }
 
+/** 处理函数组件 */
 function updateFunctionComponent(fiber) {
   stateHooks = [];
   stateHookIndex = 0;
@@ -199,6 +212,7 @@ function updateFunctionComponent(fiber) {
   reconcileChildren(fiber, children)
 }
 
+/** 处理默认组件 */
 function updateHostComponent(fiber) {
   if (!fiber.dom) {
     const dom = (fiber.dom = createDom(fiber.type, fiber.props))
@@ -231,6 +245,7 @@ function performWorkOfUnit(fiber) {
   }
 }
 
+/** 更新 */
 function update() {
   let currentFiber = wipFiber
   return () => {
@@ -245,6 +260,15 @@ function update() {
 
 let stateHooks;
 let stateHookIndex;
+
+/**
+ * useState
+ * @description 管理状态
+ * @param {*} initial
+ * @example
+ * const [state, setState] = useState(0)
+ * const [state, setState] = useState(() => 0)
+ */
 export function useState(initial) {
   let currentFiber = wipFiber;
   const oldHook = currentFiber.alternate?.stateHooks[stateHookIndex];
