@@ -293,6 +293,9 @@ export function useState(initial) {
   currentFiber.stateHooks = stateHooks;
 
   function setState(action) {
+    const edgerState = typeof action === "function" ? action(stateHook.state) : action
+    if (edgerState === stateHook.state) return
+
     stateHook.queue.push(action);
 
     wipRoot = {
