@@ -33,9 +33,9 @@
 
 ### day 6
 
-- [ ] 实现 useState
-- [ ] 批量执行 action
-- [ ] 提前检测 减少不必要更新
+- [x] 实现 useState
+- [x] 批量执行 action
+- [x] 提前检测 减少不必要更新
 
 ## Directory structure
 
