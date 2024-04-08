@@ -21,7 +21,7 @@ function createElement(type, config, ...children) {
   }
 }
 
-let wipRoot =null
+let wipRoot = null
 let currentRoot = null;
 let nextWorkOfUnit = null;
 let deletions = [];
@@ -39,14 +39,15 @@ function render(el, container) {
 
 /** 任务调度器 */
 function workerLoop(deadline) {
-  while(deadline.timeRemaining() > 1 && nextWorkOfUnit) {
+  while (deadline.timeRemaining() > 1 && nextWorkOfUnit) {
     nextWorkOfUnit = performWorkOfUnit(nextWorkOfUnit)
 
-    if(wipRoot?.sibling?.type === nextWorkOfUnit?.type) {
+    if (wipRoot?.sibling?.type === nextWorkOfUnit?.type) {
+      console.log("hit", wipRoot, nextWorkOfUnit);
       nextWorkOfUnit = undefined
     }
   }
-  if(!nextWorkOfUnit && wipRoot){
+  if (!nextWorkOfUnit && wipRoot) {
     commitRoot()
   }
 
@@ -65,31 +66,31 @@ function commitRoot() {
   deletions = []
 }
 function commitDeletion(fiber) {
-  if(fiber.dom) {
+  if (fiber.dom) {
     let fiberParent = fiber.parent
-    while(!fiberParent.dom) {
+    while (!fiberParent.dom) {
       fiberParent = fiberParent.parent
     }
     fiberParent.dom.removeChild(fiber.dom)
-  }else{
+  } else {
     commitDeletion(fiber.child)
   }
 }
 function commitWork(fiber) {
-  if(!fiber) return
+  if (!fiber) return
 
   // 忽略空的function组件
   let fiberParent = fiber.parent
-  while(!fiberParent.dom) {
+  while (!fiberParent.dom) {
     fiberParent = fiberParent.parent
   }
 
-  switch(fiber.effectTag) {
+  switch (fiber.effectTag) {
     case "UPDATE":
       updateProps(fiber.dom, fiber.props, fiber.alternate?.props);
       break
     case "PLACEMENT":
-      if(fiber.dom) {
+      if (fiber.dom) {
         fiberParent.dom.append(fiber.dom)
       }
       break
@@ -101,12 +102,12 @@ function commitWork(fiber) {
 
 function createDom(type, props) {
   return type === 'TEXT_ELEMENT'
-    ? document.createTextNode(props.nodeValue?props.nodeValue:'')
+    ? document.createTextNode(props.nodeValue ? props.nodeValue : '')
     : document.createElement(type)
 }
 
 /** 处理Props */
-function updateProps (dom, nextProps, prevProps = {}) {
+function updateProps(dom, nextProps, prevProps = {}) {
   // 1. old 有  new 没有 删除
   Object.keys(prevProps).forEach(key => {
     if (key !== 'children') {
@@ -120,8 +121,8 @@ function updateProps (dom, nextProps, prevProps = {}) {
   // 3. new 有 old 有 修改
   Object.keys(nextProps).forEach(key => {
     if (key !== 'children') {
-      if(nextProps[key] !== prevProps[key]) {
-        if(key.startsWith('on')) {
+      if (nextProps[key] !== prevProps[key]) {
+        if (key.startsWith('on')) {
           const eventType = key.slice(2).toLowerCase();
 
           dom.removeEventListener(eventType, prevProps[key]);
@@ -137,7 +138,7 @@ function updateProps (dom, nextProps, prevProps = {}) {
 function reconcileChildren(fiber, children) {
   let oldFiber = fiber.alternate?.child;
   let prevChild = null;
-  children.forEach((child,index) => {
+  children.forEach((child, index) => {
     const isSameType = oldFiber && oldFiber.type === child.type;
 
     let newFiber;
@@ -155,8 +156,8 @@ function reconcileChildren(fiber, children) {
       }
     } else {
       // add
-      if(child) {
-        newFiber ={
+      if (child) {
+        newFiber = {
           type: child.type,
           props: child.props,
           child: null,
@@ -167,7 +168,7 @@ function reconcileChildren(fiber, children) {
         }
       }
 
-      if(oldFiber)
+      if (oldFiber)
         deletions.push(oldFiber)
     }
 
@@ -179,7 +180,7 @@ function reconcileChildren(fiber, children) {
     else
       prevChild.sibling = newFiber;
 
-    if(newFiber) prevChild = newFiber
+    if (newFiber) prevChild = newFiber
   })
   while (oldFiber) {
     deletions.push(oldFiber)
@@ -194,12 +195,12 @@ function updateFunctionComponent(fiber) {
 }
 
 function updateHostComponent(fiber) {
-  if(!fiber.dom) {
+  if (!fiber.dom) {
     const dom = (fiber.dom = createDom(fiber.type, fiber.props))
     updateProps(dom, fiber.props)
   }
   const children = fiber.props.children
-  reconcileChildren(fiber,children)
+  reconcileChildren(fiber, children)
 }
 
 /** 单元工作：处理一个单个dom节点 */
@@ -211,13 +212,13 @@ function performWorkOfUnit(fiber) {
     : updateHostComponent(fiber)
 
   // 返回下一个工作单元
-  if(fiber.child) {
+  if (fiber.child) {
     return fiber.child
   }
 
   let nextFiber = fiber
-  while(nextFiber) {
-    if(nextFiber.sibling)
+  while (nextFiber) {
+    if (nextFiber.sibling)
       return nextFiber.sibling
 
     // 回到父级
@@ -230,7 +231,7 @@ function update() {
   return () => {
     wipRoot = {
       ...currentFiber,
-      alternate: currentRoot,
+      alternate: currentFiber,
     };
 
     nextWorkOfUnit = wipRoot;
