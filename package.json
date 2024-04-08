@@ -2,7 +2,9 @@
   "name": "mini-react",
   "description": "Implement a simple react",
   "scripts": {
-    "dev:play": "pnpm --filter ./playground dev"
+    "dev:play": "pnpm --filter ./playground dev",
+    "build:play": "pnpm --filter ./playground build",
+    "preview:play": "pnpm --filter ./playground preview"
   },
   "dependencies": {
     "mini-react": "workspace:^",
