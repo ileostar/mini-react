@@ -236,7 +236,7 @@ function update() {
   return () => {
     wipRoot = {
       ...currentFiber,
-      alternate: currentRoot,
+      alternate: currentFiber,
     };
 
     nextWorkOfUnit = wipRoot;
