@@ -1,58 +1,29 @@
-import React from 'mini-react'
+import React, { useState } from 'mini-react'
 
-let countFoo = 1
 function Foo() {
-  console.log("foo rerun")
-  const update = React.update()
+  console.log("re foo")
+  const [count, setCount] = React.useState(10);
+  const [bar, setBar] = React.useState("bar");
   function handleClick() {
-    countFoo ++
-    update()
+    setCount((c) => c + 1);
+    setBar("foo");
   }
 
   return (
     <div>
       <h1>foo</h1>
-      {countFoo}
+      {count}
+      <div>{bar}</div>
       <button onClick={handleClick}>click</button>
     </div>
-  )
+  );
 }
-let countBar = 1
-function Bar() {
-  console.log("bar rerun")
 
-  const update = React.update()
-  function handleClick() {
-    countBar ++
-    update()
-  }
-
+export function App() {
   return (
     <div>
-      <h1>bar</h1>
-      {countBar}
-      <button onClick={handleClick}>click</button>
+      hi-mini-react
+      <Foo></Foo>
     </div>
-  )
-}
-
-
-let countRoot = 1
-export function App() {
-  console.log("app rerun")
-
-  const update = React.update()
-  function handleClick() {
-    countRoot ++
-    update()
-  }
-  return (
-    <div class="app">
-      <h1>hello world</h1>
-      {countRoot}
-      <button onClick={handleClick}>click</button>
-      <Foo />
-      <Bar />
-    </div>
-  )
+  );
 }
