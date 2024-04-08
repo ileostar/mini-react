@@ -51,7 +51,7 @@
 │   └── package.json
 ├── .editorconfig         // IDE配置文件
 ├── .gitignore            // git忽略文件
-├──  LICENSE              // 许可证
+├── LICENSE              // 许可证
 ├── README.md             // 项目说明文件
 ├── packages.json         // 项目配置文件
 ├── pnpm-lock.yaml        // pnpm依赖文件
