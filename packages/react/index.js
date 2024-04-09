@@ -1,10 +1,8 @@
 /**
- * @description: react
- * @author: wxy
- * @create: 2022-04-06 14:55
- * @update: 2022-04-06 14:55
+ * @description: mini-react
+ * @author: ileostar
+ * @create: 2024-04-23 14:55
  * @version: 1.0
- * @lastUpdate: 2022-04-06 14:55
  */
 
 /** 创建文本节点 */
