@@ -37,6 +37,11 @@
 - [x] 批量执行 action
 - [x] 提前检测 减少不必要更新
 
+### day 7
+
+- [x] 实现 useEffect
+- [x] 实现 cleanup
+
 ## Directory structure
 
 ```text

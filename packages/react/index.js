@@ -1,3 +1,12 @@
+/**
+ * @description: react
+ * @author: wxy
+ * @create: 2022-04-06 14:55
+ * @update: 2022-04-06 14:55
+ * @version: 1.0
+ * @lastUpdate: 2022-04-06 14:55
+ */
+
 /** 创建文本节点 */
 function createTextNode(text) {
   return {
@@ -67,12 +76,56 @@ requestIdleCallback(workerLoop)
 function commitRoot() {
   deletions.forEach(commitDeletion);
   commitWork(wipRoot.child)
+  commitEffectHook()
   currentRoot = wipRoot
 
   // 重置
   wipRoot = null
   deletions = []
 }
+
+function commitEffectHook() {
+  function run(fiber) {
+    if (!fiber) return
+
+    if (!fiber.alternate) {
+      fiber.effectHooks?.forEach(hook => {
+        hook?.callback()
+      })
+    } else {
+      fiber.effectHooks?.forEach((newHook, index) => {
+        if (newHook.deps.length > 0) {
+          const oldHook = fiber.alternate?.effectHooks[index]
+
+          const needUpdate = oldHook?.deps.some((oldDeps, idx) => {
+            return oldDeps !== newHook.deps[idx]
+          })
+
+          needUpdate && (newHook.cleanup = oldHook?.callback())
+        }
+      })
+    }
+
+    run(fiber.child)
+    run(fiber.sibling)
+  }
+  function runCleanUp(fiber) {
+    if (!fiber) return
+
+    fiber.alternate?.effectHooks?.forEach(hook => {
+      if (hook.deps.length > 0) {
+        hook.cleanup && hook.cleanup()
+      }
+    })
+
+    runCleanUp(fiber.child)
+    runCleanUp(fiber.sibling)
+  }
+
+  runCleanUp(wipRoot)
+  run(wipRoot)
+}
+
 /** 统一删除节点 */
 function commitDeletion(fiber) {
   if (fiber.dom) {
@@ -205,6 +258,7 @@ function reconcileChildren(fiber, children) {
 function updateFunctionComponent(fiber) {
   stateHooks = [];
   stateHookIndex = 0;
+  effectHooks = [];
   wipFiber = fiber;
   const children = [fiber.type(fiber.props)]
   reconcileChildren(fiber, children)
@@ -307,8 +361,26 @@ export function useState(initial) {
   return [stateHook.state, setState];
 }
 
+let effectHooks;
+/**
+ * useEffect
+ * @param {} callback
+ * @param {*} deps
+ *
+ */
+export function useEffect(callback, deps) {
+  const effectHook = {
+    callback,
+    deps
+  }
+
+  effectHooks.push(effectHook)
+  wipFiber.effectHooks = effectHooks
+}
+
 const React = {
   update,
+  useEffect,
   useState,
   render,
   createElement
