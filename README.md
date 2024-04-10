@@ -44,7 +44,7 @@
 
 ## day 8 实现 todo-list
 
-- [] 实现 todo-list
+- [x] 实现 todo-list
 
 ## Directory structure
 
