@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'mini-react'
 
 function List() {
   const [inputValue, setInputValue] = useState('');
-  const [filterVal, setFilterVal] = useState('');
+  const [filterVal, setFilterVal] = useState('all');
   const [todolist, setTodolist] = useState([]);
 
   useEffect(() => {
+    setFilterVal(localStorage.getItem('filterVal') ?? 'all')
     setTodolist(localStorage.getItem('todolist') ? JSON.parse(localStorage.getItem('todolist')) : [])
   }, [])
-
-  useEffect(() => {
-    setFilterVal(localStorage.getItem('filterVal') ?? 'all')
-  }, [todolist, filterVal])
 
   function handleAdd() {
     if(!inputValue) return
@@ -40,7 +37,6 @@ function List() {
         todo.id === idx ? {...todo, done: !todo.done} : todo)
       ))
   }
-
 
   let renderList = todolist.filter(todo => {
     if(filterVal === 'all') return true
