@@ -9,5 +9,9 @@
   "dependencies": {
     "mini-react": "workspace:^",
     "mini-react-dom": "workspace:^"
+  },
+  "devDependencies": {
+    "@vitest/ui": "^1.4.0",
+    "vitest": "^1.4.0"
   }
 }

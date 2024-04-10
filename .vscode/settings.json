@@ -1,6 +1,8 @@
 {
   "nuxt.isNuxtApp": false,
   "cSpell.words": [
-    "ileostar"
+    "ileostar",
+    "todolist",
+    "vdom"
   ]
 }
