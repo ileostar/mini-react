@@ -66,6 +66,10 @@ function workerLoop(deadline) {
     commitRoot()
   }
 
+  if (nextWorkOfUnit && !wipRoot) {
+    wipRoot = currentRoot
+  }
+
   requestIdleCallback(workerLoop)
 }
 requestIdleCallback(workerLoop)
@@ -146,17 +150,11 @@ function commitWork(fiber) {
     fiberParent = fiberParent.parent
   }
 
-  switch (fiber.effectTag) {
-    case "UPDATE":
-      updateProps(fiber.dom, fiber.props, fiber.alternate?.props);
-      break
-    case "PLACEMENT":
-      if (fiber.dom) {
-        fiberParent.dom.append(fiber.dom)
-      }
-      break
+  if (fiber.effectTag === "PLACEMENT" && fiber.dom) {
+    fiberParent.dom.appendChild(fiber.dom)
+  } else if (fiber.effectTag === "UPDATE" && fiber.dom) {
+    updateProps(fiber.dom, fiber.props, fiber.alternate?.props);
   }
-
   commitWork(fiber.child)
   commitWork(fiber.sibling)
 }
